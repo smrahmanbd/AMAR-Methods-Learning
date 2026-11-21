@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learn the seven ideas · AMAR Methods Learning</title>
+<meta name="description" content="Beginner-friendly animations, interactive worked solutions, a study guide and memory techniques for the methods used in accident research.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<header class="band"><div class="in"><a class="brand" href="index.html"><i></i>AMAR Methods Learning</a><nav aria-label="Pages"><a href="index.html">Home</a><a href="learn.html" aria-current="page">Learn</a><a href="basics.html">Basics</a><a href="models.html">Models</a><a href="study.html">Case study</a><a href="research.html">Research</a><a href="practice.html">Practice</a><a href="memory.html">Remember</a><a href="viewer.html?doc=materials/AMAR_Methods_Study_Guide.pdf&mode=guide">Study guide</a></nav></div></header>
+<main class="wrap">
+<div><p class="eyebrow">Learn</p><h1>Seven ideas, each with a tool you can move</h1></div>
+<p class="lede">Read the short explanation, move the controls, then reveal a hand calculation one step at a time. Each idea ends with a picture to remember it by.</p>
+<nav class="jump" aria-label="Ideas"><a href="#heterogeneity">1 · One variable, many effects</a><a href="#simulation">2 · Averaging over draws</a><a href="#endogeneity">3 · When the “cause” responds to risk</a><a href="#space">4 · Neighbours are not independent</a><a href="#instability">5 · Effects drift over time</a><a href="#causality">6 · Forecasting is not explaining</a><a href="#conflicts">7 · From near misses to crashes</a></nav>
+
+<section class="concept" id="heterogeneity">
+<p class="eyebrow">Idea 1 of 7</p><h2>Unobserved heterogeneity</h2>
+<p>Suppose a model says that wearing a seat belt lowers injury severity by a certain amount. A standard model gives <b>one</b> number for everybody. In reality the benefit depends on things the crash report never records: how the person was sitting, their bone strength, the exact angle of impact. This unrecorded variation is called unobserved heterogeneity.</p>
+<p>A <b>random-parameters</b> model lets the effect differ from person to person. The analyst chooses a shape for how the effects are spread out. That shape is called the <b>mixing distribution</b>. The model then estimates its centre and its spread.</p>
+<h3>Try it</h3>
+<div class="ctl"><label>Mixing distribution<select id="h-dist"><option value="normal">Normal (bell shape)</option><option value="lognormal">Lognormal (one sign only)</option><option value="triangular">Triangular</option><option value="uniform">Uniform (flat)</option></select></label>
+<label>Centre of the effect <b id="h-cv"></b><input type="range" id="h-c" min="-2" max="2" step="0.05" value="-0.5"></label><label>Spread across people <b id="h-sv"></b><input type="range" id="h-s" min="0" max="2" step="0.05" value="0.8"></label></div>
+<div class="btns"><button class="go" id="h-go">Sample 300 new people</button></div>
+<div class="scroll"><svg class="chart" id="h-svg" viewBox="0 0 820 300" role="img" aria-label="Histogram of the effect across 300 simulated people"></svg></div>
+<p class="read" id="h-read" aria-live="polite"></p>
+<h3>Solve one by hand</h3>
+<div class="steps" data-steps='[&quot;A model estimates that the effect of a variable is normally distributed with mean \u22120.5 and standard deviation 0.8.&quot;, &quot;Question: for what share of people is the effect positive (the variable raises risk)?&quot;, &quot;Standardise zero: z = (0 \u2212 (\u22120.5)) \u00f7 0.8 = 0.625.&quot;, &quot;The share of a normal distribution below z = 0.625 is 0.734.&quot;, &quot;Share above zero = 1 \u2212 0.734 = 0.266. So for about &lt;b&gt;27%&lt;/b&gt; of people the variable raises risk, although the average effect is negative.&quot;, &quot;Check it in the tool: Normal, centre \u22120.50, spread 0.80. The amber share should be near 27%.&quot;]'><b>Worked example, one step at a time</b></div>
+<p class="note">Other ways to capture heterogeneity include letting the mean or the variance of the random parameter depend on other variables, and latent-class models, which sort observations into a few hidden groups. Mannering, Shankar and Bhat (2016) review them and note that no single approach is clearly best.</p>
+<div class="hook"><b>Remember it · stop 1, the costume shop.</b> Every customer who walks through the same door comes out in a different costume. One door (one variable), many outcomes (many effects). The shopkeeper sorts the costumes onto a bell-shaped rail: the mixing distribution.</div>
+</section>
+
+<section class="concept" id="simulation">
+<p class="eyebrow">Idea 2 of 7</p><h2>Simulated maximum likelihood</h2>
+<p>A random-parameters model has a problem: to compute a probability it must average over <b>every possible value</b> of the effect. That average is an integral with no exact formula.</p>
+<p>The solution is simulation. Draw a value of the effect, compute the probability for that value, repeat many times, and take the average. The more draws, the closer the average gets to the true answer. Estimating a model this way is called <b>simulated maximum likelihood</b>.</p>
+<p><b>Halton draws</b> are a trick to need fewer draws. Random draws clump by chance. Halton draws follow a fixed pattern that covers the range evenly, so the average settles sooner.</p>
+<h3>Try it</h3>
+<div class="seg" id="s-mode" role="group" aria-label="Type of draw"><button data-m="random" aria-pressed="true">Random draws</button><button data-m="halton" aria-pressed="false">Halton draws</button></div>
+<div class="btns"><button class="go" id="s-1">Add 1 draw</button><button class="go" id="s-10">Add 10</button><button class="go" id="s-play">Play</button><button class="go ghost" id="s-reset">Start again</button></div>
+<div class="scroll"><svg class="chart" id="s-svg" viewBox="0 0 820 300" role="img" aria-label="Running average of simulated probabilities approaching the exact answer"></svg></div>
+<p class="read" id="s-read" aria-live="polite"></p>
+<p class="note">Here the effect is normal with mean 0.5 and standard deviation 1, and the probability is the logistic function of the effect. The teal line is the running average; the dashed amber line is the exact answer.</p>
+<h3>Solve one by hand</h3>
+<div class="steps" data-steps='[&quot;A crash is severe with probability P = 1 \u00f7 (1 + e&lt;sup&gt;\u2212\u03b2&lt;/sup&gt;), and \u03b2 varies across people. We draw four values of \u03b2: \u22120.2, 0.3, 0.6 and 1.1.&quot;, &quot;\u03b2 = \u22120.2 gives P = 1 \u00f7 (1 + e&lt;sup&gt;0.2&lt;/sup&gt;) = 0.450.&quot;, &quot;\u03b2 = 0.3 gives P = 0.574.&quot;, &quot;\u03b2 = 0.6 gives P = 0.646.&quot;, &quot;\u03b2 = 1.1 gives P = 0.750.&quot;, &quot;Average: (0.450 + 0.574 + 0.646 + 0.750) \u00f7 4 = &lt;b&gt;0.605&lt;/b&gt;. That is the simulated probability with four draws. Real studies use hundreds or thousands of draws per observation.&quot;]'><b>Worked example, one step at a time</b></div>
+
+<div class="hook"><b>Remember it · stop 2, the dart casino.</b> A gambler throws darts at a wall of numbers and shouts the running average after each throw. Next to him a robot named Halton places its darts in a neat, even pattern and gets the right average with far fewer darts.</div>
+</section>
+
+<section class="concept" id="endogeneity">
+<p class="eyebrow">Idea 3 of 7</p><h2>Endogeneity</h2>
+<p>Road agencies put ice-warning signs where ice crashes have happened. Now compare segments with signs to segments without. The signed segments have <b>more</b> crashes. Do signs cause crashes?</p>
+<p>No. The ice causes both the sign and the crashes. The sign is <b>endogenous</b>: it is a response to the very risk we are trying to measure. Mannering and Bhat (2014) use this example. The same trap appears with personal choices. If safer drivers are the ones who buy cars with side airbags, the airbag looks better than it is.</p>
+<p>Cures include instrumental variables, control functions and joint models of the choice and the outcome. All of them try to separate the part of the variable that is a response to risk from the part that is not.</p>
+<h3>Try it</h3>
+<div class="seg" id="e-mode" role="group" aria-label="How signs are placed"><button data-m="risk" aria-pressed="true">Signs go where ice is worst</button><button data-m="random" aria-pressed="false">Signs placed at random</button></div>
+<div class="btns"><button class="go" id="e-run">New road network</button><label style="display:flex;gap:8px;align-items:center;font-weight:500"><input type="checkbox" id="e-ice"> Show the hidden ice</label></div>
+<div class="scroll"><svg class="chart" id="e-svg" viewBox="0 0 780 305" role="img" aria-label="Grid of road segments with warning signs and a bar chart of average crashes with and without signs"></svg></div>
+<p class="read" id="e-read" aria-live="polite"></p>
+<h3>Solve one by hand</h3>
+<div class="steps" data-steps='[&quot;100 icy segments would have 10 crashes each without a sign. 300 ordinary segments have 4 crashes each. A sign truly cuts crashes by 20%.&quot;, &quot;The agency puts signs on all 100 icy segments. Each now has 10 \u00d7 0.8 = 8 crashes.&quot;, &quot;The naive comparison: signed segments average 8, unsigned segments average 4.&quot;, &quot;8 \u00f7 4 = 2. Signs appear to &lt;b&gt;double&lt;/b&gt; crashes (+100%).&quot;, &quot;The truth is \u221220%. The entire difference comes from the ice, which the analyst never saw.&quot;, &quot;Now place signs at random in the tool. The two groups become alike in iciness and the comparison returns to about \u221220%.&quot;]'><b>Worked example, one step at a time</b></div>
+
+<div class="hook"><b>Remember it · stop 3, the icy bridge.</b> Warning signs sprout from the bridge like mushrooms, but only where the invisible ice troll sleeps underneath. A tourist counts the wrecks next to the signs and blames the signs. Nobody sees the troll.</div>
+</section>
+
+<section class="concept" id="space">
+<p class="eyebrow">Idea 4 of 7</p><h2>Spatial and temporal correlation</h2>
+<p>Two neighbouring road segments share weather, drainage, driver population and enforcement. If the model does not include these, what it fails to explain on one segment will look like what it fails to explain next door. The same happens over time: this year’s unexplained crashes at a site resemble last year’s.</p>
+<p>A model that treats every observation as independent then believes it has more information than it does. Its estimates look more certain than they are, and they can also be biased. Spatial and temporal models add an explicit link between neighbours and between years.</p>
+<h3>Try it</h3>
+<div class="ctl"><label>Strength of the shared influence <b id="p-rv"></b><input type="range" id="p-r" min="0" max="0.95" step="0.05" value="0.6"></label></div>
+<div class="btns"><button class="go" id="p-new">New map</button></div>
+<div class="scroll"><svg class="chart" id="p-svg" viewBox="0 0 800 304" role="img" aria-label="Map of 96 road segments coloured by unexplained crashes"></svg></div>
+<p class="read" id="p-read" aria-live="polite"></p>
+<h3>Solve one by hand</h3>
+<div class="steps" data-steps='[&quot;You have 100 observations: 10 segments on each of 10 corridors. Segments on the same corridor have a correlation of 0.5.&quot;, &quot;A rule of thumb for clustered data, the design effect, is 1 + (m \u2212 1) \u00d7 \u03c1, where m is the cluster size and \u03c1 the correlation.&quot;, &quot;Design effect = 1 + (10 \u2212 1) \u00d7 0.5 = 5.5.&quot;, &quot;Effective number of independent observations = 100 \u00f7 5.5 \u2248 &lt;b&gt;18&lt;/b&gt;.&quot;, &quot;So the 100 observations carry about as much information as 18 independent ones. A model that ignores this reports standard errors that are far too small.&quot;]'><b>Worked example, one step at a time</b></div>
+<p class="note">The design effect is a simple teaching approximation. Research models describe the correlation directly, for example with spatially correlated error terms.</p>
+<div class="hook"><b>Remember it · stop 4, gossip street.</b> A street of 100 houses where every neighbour repeats what the house next door said. You knock on 100 doors and hear only 18 different opinions.</div>
+</section>
+
+<section class="concept" id="instability">
+<p class="eyebrow">Idea 5 of 7</p><h2>Temporal instability</h2>
+<p>Cars get safer, phones enter the cabin, a recession changes who drives, a pandemic empties the roads. The way a variable affects crashes can shift with each of these. Mannering (2018) calls this <b>temporal instability</b>, and a large body of work has since found that parameters estimated in one period often differ in the next.</p>
+<p>The standard check: estimate one model on all years together, then a separate model for each period. If the separate models fit much better, the effects are not stable. A <b>likelihood ratio test</b> says how much better counts as “much”.</p>
+<h3>Try it</h3>
+<div class="ctl"><label>Drift per year <b id="t-dv"></b><input type="range" id="t-d" min="-0.15" max="0.15" step="0.01" value="-0.08"></label><label>Year-to-year noise <b id="t-nv"></b><input type="range" id="t-n" min="0" max="0.3" step="0.01" value="0.06"></label></div>
+<div class="btns"><button class="go" id="t-play">Play the ten years</button></div>
+<div class="scroll"><svg class="chart" id="t-svg" viewBox="0 0 820 300" role="img" aria-label="Estimated effect of one variable in each of ten years, with the pooled estimate"></svg></div>
+<p class="read" id="t-read" aria-live="polite"></p>
+<h3>Solve one by hand</h3>
+<div class="steps" data-steps='[&quot;A model with 12 parameters is estimated three times. All years together: log-likelihood \u22121,250. Years 2019\u20132021 only: \u2212600. Years 2022\u20132024 only: \u2212620.&quot;, &quot;Add the two separate log-likelihoods: \u2212600 + (\u2212620) = \u22121,220.&quot;, &quot;Test statistic = \u22122 \u00d7 [pooled \u2212 separate] = \u22122 \u00d7 [\u22121,250 \u2212 (\u22121,220)] = \u22122 \u00d7 (\u221230) = 60.&quot;, &quot;Degrees of freedom: the two separate models have 24 parameters, the pooled model 12. Difference = 12.&quot;, &quot;The 5% critical value of chi-square with 12 degrees of freedom is 21.03.&quot;, &quot;60 is far above 21.03. &lt;b&gt;Reject stability&lt;/b&gt;: the two periods need different parameters, and a single pooled model would mislead.&quot;]'><b>Worked example, one step at a time</b></div>
+
+<div class="hook"><b>Remember it · stop 5, the melting clock tower.</b> The clock’s numbers slide down the tower wall year by year. At its foot a judge holds two calendars, one in each hand, weighs them and announces: “These are not the same year.”</div>
+</section>
+
+<section class="concept" id="causality">
+<p class="eyebrow">Idea 6 of 7</p><h2>Prediction versus causality</h2>
+<p>Two different questions hide in most safety studies. <b>Prediction:</b> how many crashes will this site have next year? <b>Causality:</b> if I change this one thing, how will crashes change? A model can be excellent at the first and wrong about the second.</p>
+<p>Mannering, Bhat, Shankar and Abdel-Aty (2020) give an example of why. In bad weather, cautious drivers stay home. The drivers observed in snow are a self-selected, riskier group. The data then mix the effect of snow with the effect of who is driving.</p>
+<p>Data-driven methods such as machine learning tend to predict well but say little about cause. Statistical models built to handle heterogeneity and endogeneity predict less sharply but support causal statements. The choice depends on the question.</p>
+<h3>Try it</h3>
+<div class="ctl"><label>Cautious drivers who stay home when it snows <b id="pc-hv"></b><input type="range" id="pc-h" min="0" max="100" step="5" value="80"></label></div>
+<div class="scroll"><svg class="chart" id="pc-svg" viewBox="0 0 780 305" role="img" aria-label="Drivers on the road on a snow day and crash rates on clear and snow days"></svg></div>
+<p class="read" id="pc-read" aria-live="polite"></p>
+<p class="note">Each dot stands for 10 drivers. Cautious drivers crash on 0.5% of clear days and 1% of snow days. Risk-takers crash on 2% and 4%. Snow doubles the risk for both.</p>
+<h3>Solve one by hand</h3>
+<div class="steps" data-steps='[&quot;500 cautious drivers: crash risk 0.5% on a clear day, 1% in snow. 500 risk-takers: 2% clear, 4% snow. For every driver, snow doubles the risk.&quot;, &quot;Clear day, everyone drives: 500 \u00d7 0.5% + 500 \u00d7 2% = 2.5 + 10 = 12.5 crashes among 1,000 drivers. Rate = 1.25%.&quot;, &quot;Snow day: 80% of cautious drivers stay home, so 100 cautious and 500 risk-takers are on the road.&quot;, &quot;Crashes in snow: 100 \u00d7 1% + 500 \u00d7 4% = 1 + 20 = 21 among 600 drivers. Rate = 3.5%.&quot;, &quot;The data say 3.5% \u00f7 1.25% = &lt;b&gt;2.8 times&lt;/b&gt;. The causal effect of snow is &lt;b&gt;2 times&lt;/b&gt;.&quot;, &quot;For forecasting tomorrow\u2019s snow-day crashes, 3.5% is the right number. For judging what snow does to a driver, or what a snow-related countermeasure could achieve, it is the wrong one.&quot;]'><b>Worked example, one step at a time</b></div>
+
+<div class="hook"><b>Remember it · stop 6, the fortune teller and the mechanic.</b> In a snowstorm, a fortune teller correctly predicts many crashes tonight. The mechanic beside her opens a bonnet to find out why. Only daredevils are on the road; the careful drivers stayed home.</div>
+</section>
+
+<section class="concept" id="conflicts">
+<p class="eyebrow">Idea 7 of 7</p><h2>Crash–conflict relationship</h2>
+<p>Crashes are rare. Waiting years to count them is slow, and each one is a tragedy. <b>Traffic conflicts</b>, or near misses, happen far more often and can be measured from video or vehicle sensors within days.</p>
+<p>The most used measures are <b>time-to-collision</b> (how many seconds until two road users would collide if neither changed course) and post-encroachment time (Arun, Haque, Sayed and Mannering, 2021). The smaller the number, the closer the call. A crash is the extreme case: time-to-collision of zero.</p>
+<p><b>Extreme value theory</b> is the statistics of rare extremes. It fits a curve to the most severe near misses and extends that curve to zero, giving an estimate of crash probability from near misses alone (Ali, Haque and Mannering, 2023).</p>
+<h3>Try it</h3>
+<div class="ctl"><label>Conflict threshold <b id="c-uv"></b><input type="range" id="c-u" min="0.8" max="2.5" step="0.1" value="1.5"></label><label>Interactions observed <b id="c-nv"></b><input type="range" id="c-n" min="1000" max="20000" step="1000" value="5000"></label></div>
+<div class="btns"><button class="go" id="c-play">Play one interaction</button></div>
+<div class="scroll"><svg class="chart" id="c-svg" viewBox="0 0 820 350" role="img" aria-label="Two cars closing in, and a histogram of time-to-collision with a fitted tail extended to zero"></svg></div>
+<p class="read" id="c-read" aria-live="polite"></p>
+<h3>Solve one by hand</h3>
+<div class="steps" data-steps='[&quot;A camera records 5,000 interactions. In 200 of them the time-to-collision drops below a threshold of 1.5 seconds. These are the conflicts.&quot;, &quot;Share of interactions that are conflicts: 200 \u00f7 5,000 = 0.04.&quot;, &quot;Among the conflicts, the average distance below the threshold is 0.25 s. A simple tail model says the chance of going at least x below the threshold is e&lt;sup&gt;\u2212x \u00f7 0.25&lt;/sup&gt;.&quot;, &quot;A crash means going the full 1.5 s below the threshold: e&lt;sup&gt;\u22121.5 \u00f7 0.25&lt;/sup&gt; = e&lt;sup&gt;\u22126&lt;/sup&gt; = 0.00248.&quot;, &quot;Crash probability per interaction = 0.04 \u00d7 0.00248 = 0.0000992.&quot;, &quot;That is about &lt;b&gt;1 crash per 10,100 interactions&lt;/b&gt;, estimated without observing a single crash.&quot;]'><b>Worked example, one step at a time</b></div>
+<p class="note">The tool and the example use the simplest possible tail, an exponential curve above a threshold. Research uses the generalised Pareto and generalised extreme value distributions, which have an extra shape parameter.</p>
+<div class="hook"><b>Remember it · stop 7, the near-miss arcade.</b> An arcade machine counts every near miss with a loud ping. Behind it lies a dragon whose tail gets thinner and thinner. Stretch the tail all the way to the wall marked zero, and its tip is the crash.</div>
+</section>
+
+<section class="concept"><h2>All seven at once</h2><p>Real crash data rarely have just one of these issues. A single data set can hide varying effects, self-selected drivers, related neighbours and drifting parameters together, and much current research is about handling several in one model.</p>
+<div class="btns"><a class="btn" href="practice.html">Practise with new numbers</a><a class="btn ghost" href="memory.html">Walk the memory route</a><a class="btn ghost" href="viewer.html?doc=materials/AMAR_Methods_Study_Guide.pdf&mode=guide">Read the study guide</a></div></section>
+</main>
+<footer class="site"><p>All data in the tools are simulated for teaching. This site is an independent learning aid and is not affiliated with the journal or its publisher. Sources are listed on the <a href="index.html#sources">home page</a>.</p></footer>
+<script src="js/common.js"></script>
+<script src="js/learn.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Restricted and unrestricted models · AMAR Methods Learning</title>
+<meta name="description" content="Beginner-friendly animations, interactive worked solutions, a study guide and memory techniques for the methods used in accident research.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<header class="band"><div class="in"><a class="brand" href="index.html"><i></i>AMAR Methods Learning</a><nav aria-label="Pages"><a href="index.html">Home</a><a href="learn.html">Learn</a><a href="basics.html">Basics</a><a href="models.html">Models</a><a href="study.html">Case study</a><a href="research.html">Research</a><a href="practice.html">Practice</a><a href="memory.html">Remember</a><a href="viewer.html?doc=materials/AMAR_Methods_Study_Guide.pdf&mode=guide">Study guide</a></nav></div></header>
+<main class="wrap">
+<div><p class="eyebrow">Basics · in depth</p><h1>Restricted and unrestricted models, animated</h1></div>
+<p class="lede">Almost every test in this field compares two versions of the same model: one that is free, and one with some of its numbers locked. This page shows what that means with four animations and five examples.</p>
+<nav class="jump" aria-label="Parts"><a href="#r1">1 · The idea</a><a href="#r2">2 · One line or two?</a><a href="#r3">3 · Restrictions are locks</a><a href="#r4">4 · What chance looks like</a><a href="#r5">5 · Degrees of freedom</a><a href="#r6">6 · Three full examples</a><a href="#r7">7 · Common mistakes</a></nav>
+
+<section class="concept" id="r1"><p class="eyebrow">Part 1 of 7</p><h2>The idea in plain words</h2><p>A model is a set of numbers (parameters) that the computer is free to choose so that the model fits the data as well as possible.</p>
+<div class="grid">
+<div class="card"><span class="num">Free</span><h3>Unrestricted model</h3><p>Every parameter can take whatever value fits best. Think of a made-to-measure suit.</p></div>
+<div class="card"><span class="num">Locked</span><h3>Restricted model</h3><p>The same model, but some parameters are <b>locked</b>: forced to be zero, forced to equal each other, or fixed at values borrowed from elsewhere. Think of a suit in one standard size.</p></div>
+<div class="card"><span class="num">The question</span><h3>The test</h3><p>Does locking those parameters make the fit <b>much</b> worse, or only a little? Much worse: the locks are wrong. Only a little: the simpler model will do.</p></div></div>
+<p>Three facts follow, and they are worth memorising.</p>
+<ul><li>The restricted model is a <b>special case</b> of the unrestricted one. (The two are called <i>nested</i>.)</li><li>The unrestricted model <b>always fits at least as well</b>, because it could choose the locked values if they were best.</li><li>So the test never asks “which fits better?” It asks “is the improvement larger than chance alone would produce?”</li></ul></section>
+
+<section class="concept" id="r2"><p class="eyebrow">Part 2 of 7</p><h2>Animation 1 · One line or two?</h2><p>The smallest possible example. Two groups of crashes, and one question: is the injury share the same in both? Press <b>Next step</b> and watch the two models try to fit the same two bars.</p><div class="seg" id="ft-data" role="group" aria-label="Data set"><button data-d="clear" aria-pressed="true">Clear difference (30% and 45%)</button><button data-d="small" aria-pressed="false">Small difference (36% and 40%)</button></div>
+<div class="btns" style="display:flex;gap:10px;flex-wrap:wrap"><button class="go" id="ft-next">Next step</button></div>
+<div class="scroll"><svg class="chart" id="ft-svg" viewBox="0 0 820 295" role="img" aria-label="Two bars fitted by one shared line and by two separate lines, with the log-likelihood of each model"></svg></div>
+<p class="read" id="ft-read" aria-live="polite"></p><p class="note">Try the second data set. With 36% and 40%, two shares still fit better than one, as they always must, but only by a hair. The statistic stays far below 3.84.</p></section>
+
+<section class="concept" id="r3"><p class="eyebrow">Part 3 of 7</p><h2>Animation 2 · Restrictions are locks</h2><p>Every restricted model in a paper is the unrestricted model with locks on some parameters. The <b>degrees of freedom</b> of the test are simply the number of locks. Choose an example and watch the locks drop.</p><div class="seg" id="lk-ex" role="group" aria-label="Example"><button data-e="zero" aria-pressed="true">A variable has no effect</button><button data-e="random" aria-pressed="false">Fixed, not random</button><button data-e="merge" aria-pressed="false">Two groups share a model</button><button data-e="years" aria-pressed="false">Same effect every year</button><button data-e="transfer" aria-pressed="false">Borrowed from another model</button></div>
+<div class="btns" style="display:flex;gap:10px;flex-wrap:wrap"><button class="go" id="lk-go">Play the locks again</button></div>
+<div class="scroll"><svg class="chart" id="lk-svg" viewBox="0 0 820 285" role="img" aria-label="Parameter slots of the unrestricted model, and the same slots with some locked in the restricted model"></svg></div>
+<p class="read" id="lk-read" aria-live="polite"></p><div class="scroll"><table class="t"><tr><th>Kind of lock</th><th>What is forced</th><th>Typical question</th></tr>
+<tr><td><b>= 0</b></td><td>A coefficient, or the spread of a random parameter, is set to zero</td><td>Does this variable matter? Is this parameter random?</td></tr>
+<tr><td><b>= each other</b></td><td>Two groups or years must share the same coefficient</td><td>Can road classes be merged? Is the effect stable over time?</td></tr>
+<tr><td><b>= borrowed values</b></td><td>All coefficients are fixed at another model’s estimates</td><td>Does model A transfer to data B?</td></tr></table></div></section>
+
+<section class="concept" id="r4"><p class="eyebrow">Part 4 of 7</p><h2>Animation 3 · What does chance alone look like?</h2><p>Even when a restriction is exactly true, the unrestricted model fits a little better, because it bends towards the random quirks of the sample. So the statistic is never exactly zero. How big does it get by luck?</p>
+<p>The tool below invents studies in which the seat belt truly makes no difference, and computes the statistic for each one. The pile that builds up is the <b>chi-square distribution</b>. The <b>critical value</b> is the point that only 5% of the pile lies beyond. The <b>p-value</b> is the share of the pile beyond <i>your</i> statistic.</p><div class="ctl"><label>Your statistic <b id="sm-sv"></b><input type="range" id="sm-s" min="0" max="12" step="0.01" value="4.82"></label></div>
+<div class="btns" style="display:flex;gap:10px;flex-wrap:wrap"><button class="go" id="sm-go">Run 500 imaginary studies</button><button class="go ghost" id="sm-reset">Start again</button></div>
+<div class="scroll"><svg class="chart" id="sm-svg" viewBox="0 0 820 305" role="img" aria-label="Histogram of likelihood ratio statistics from simulated studies in which the restriction is true"></svg></div>
+<p class="read" id="sm-read" aria-live="polite"></p></section>
+
+<section class="concept" id="r5"><p class="eyebrow">Part 5 of 7</p><h2>Animation 4 · Degrees of freedom move the ruler</h2><p>Each lock gives chance one more way to open a gap between the two models. So with more locks, larger statistics are normal, and the critical value moves to the right. Move the slider.</p><div class="ctl"><label>Degrees of freedom (number of locks) <b id="df-kv"></b><input type="range" id="df-k" min="1" max="30" step="1" value="1"></label></div>
+<div class="scroll"><svg class="chart" id="df-svg" viewBox="0 0 820 250" role="img" aria-label="Chi-square distribution and its critical values for the chosen degrees of freedom"></svg></div>
+<p class="read" id="df-read" aria-live="polite"></p><div class="scroll"><table class="t"><tr><th>Degrees of freedom</th><th>1</th><th>2</th><th>3</th><th>4</th><th>10</th><th>12</th><th>14</th></tr><tr><td><b>Critical value at 95%</b></td><td>3.84</td><td>5.99</td><td>7.81</td><td>9.49</td><td>18.31</td><td>21.03</td><td>23.68</td></tr></table></div></section>
+
+<section class="concept" id="r6"><p class="eyebrow">Part 6 of 7</p><h2>Three full examples</h2><h3>Example 1 · Does a seat belt matter? (one lock)</h3><div class="steps" data-steps='[&quot;Unrestricted model: a separate injury share for each group. Restricted model: one share for both (the two shares are locked equal).&quot;, &quot;Data: 30 of 100 belted and 45 of 100 unbelted crashes ended in injury.&quot;, &quot;Restricted: share 0.375; log-likelihood = 75 \u00d7 ln(0.375) + 125 \u00d7 ln(0.625) = &lt;b&gt;\u2212132.31&lt;/b&gt;.&quot;, &quot;Unrestricted: shares 0.30 and 0.45; log-likelihood = &lt;b&gt;\u2212129.90&lt;/b&gt;.&quot;, &quot;Statistic = \u22122 \u00d7 [\u2212132.31 \u2212 (\u2212129.90)] = &lt;b&gt;4.82&lt;/b&gt;. One lock, so 1 degree of freedom; critical value 3.84.&quot;, &quot;4.82 &amp;gt; 3.84: the lock is rejected. The seat belt matters.&quot;]'><b>Worked example, one step at a time</b></div><h3>Example 2 · Should rollover be a random parameter? (two locks)</h3><div class="steps" data-steps='[&quot;Unrestricted model: rollover has a mean \u03b2, a spread \u03c3, and its mean shifts with weather by \u0398. Restricted model: \u03c3 = 0 and \u0398 = 0, an ordinary fixed parameter.&quot;, &quot;Log-likelihood of the fixed model: \u2212598.3. Of the random model: \u2212591.0.&quot;, &quot;Statistic = \u22122 \u00d7 [\u2212598.3 \u2212 (\u2212591.0)] = \u22122 \u00d7 (\u22127.3) = &lt;b&gt;14.6&lt;/b&gt;.&quot;, &quot;Two locks (\u03c3 and \u0398), so 2 degrees of freedom; critical value 5.99.&quot;, &quot;14.6 &amp;gt; 5.99: the locks are rejected.&quot;, &quot;Keep rollover as a random parameter with heterogeneity in its mean.&quot;]'><b>Worked example, one step at a time</b></div><h3>Example 3 · Can two road classes share one model? (ten locks)</h3><div class="steps" data-steps='[&quot;Unrestricted: a separate model for dual carriageways (13 parameters) and for single carriageways (12 parameters): 25 free parameters.&quot;, &quot;Restricted: one pooled model with 15 parameters. Pooling locks 25 \u2212 15 = 10 parameters.&quot;, &quot;Log-likelihoods: pooled \u22121,105.0; dual \u2212640.2; single \u2212447.5. The separate models together: \u22121,087.7.&quot;, &quot;Statistic = \u22122 \u00d7 [\u22121,105.0 \u2212 (\u22121,087.7)] = \u22122 \u00d7 (\u221217.3) = &lt;b&gt;34.6&lt;/b&gt;.&quot;, &quot;10 degrees of freedom; critical value 18.31.&quot;, &quot;34.6 &amp;gt; 18.31: the locks are rejected. Model the two road classes separately.&quot;]'><b>Worked example, one step at a time</b></div></section>
+
+<section class="concept" id="r7"><p class="eyebrow">Part 7 of 7</p><h2>Common mistakes</h2><div class="grid">
+<div class="card"><h3>Subtracting the wrong way</h3><p>The restricted log-likelihood goes first. If your statistic is negative, the two are swapped.</p></div>
+<div class="card"><h3>Different data</h3><p>Both models must be fitted to exactly the same crashes. Dropping a few records for one model breaks the test.</p></div>
+<div class="card"><h3>Not nested</h3><p>A multinomial logit and an ordered probit are not special cases of each other. Use AIC or BIC for those.</p></div>
+<div class="card"><h3>Miscounting the locks</h3><p>Degrees of freedom are the number of parameters locked, not the number of parameters in either model.</p></div>
+<div class="card"><h3>“Not rejected” read as “proved”</h3><p>It only means these data cannot tell the two models apart.</p></div>
+<div class="card"><h3>Forgetting which result is the good news</h3><p>For transferability, <i>rejected</i> is the interesting finding. For a partially constrained model, <i>not rejected</i> is.</p></div></div>
+<div class="btns"><a class="btn" href="study.html#step8">Try the four-test calculator</a><a class="btn ghost" href="basics.html">Back to the basics</a></div>
+<div class="hook"><b>Remember it · the locksmith and Judge Chi.</b> A locksmith walks along a row of dials (the parameters) and snaps padlocks onto some of them. Judge Chi watches the needle of a fit-meter drop, doubles the drop, and counts the padlocks to choose his ruler. Few padlocks and a big drop: “Take them off!” Many padlocks and a small drop: “Leave them on. The simple model stands.”</div></section>
+</main>
+<footer class="site"><p>All data in the tools are simulated for teaching. This site is an independent learning aid and is not affiliated with the journal or its publisher. Sources are listed on the <a href="index.html#sources">home page</a>.</p></footer>
+<script src="js/common.js"></script>
+<script src="js/restricted.js"></script>
+</body>
+</html>
