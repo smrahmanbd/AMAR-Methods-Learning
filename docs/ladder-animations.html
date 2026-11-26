@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logit ladder animations · AMAR Methods Learning</title>
+<meta name="description" content="Ten interactive animations, from the logit curve and likelihood to random parameters with heterogeneity in means and variances.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/site.css"><link rel="stylesheet" href="css/ladder.css">
+</head>
+<body>
+<header class="band"><div class="in"><a class="brand" href="index.html"><i></i>AMAR Methods Learning</a><nav aria-label="Pages"><a href="index.html">Home</a><a href="learn.html">Learn</a><a href="basics.html">Basics</a><a href="models.html">Models</a><a href="ladder.html" aria-current="page">Logit ladder</a><a href="study.html">Case study</a><a href="research.html">Research</a><a href="practice.html">Practice</a><a href="memory.html">Remember</a><a href="viewer.html?doc=materials/AMAR_Methods_Study_Guide.pdf&mode=guide">Study guide</a></nav></div></header>
+<main class="wrap">
+<div><p class="eyebrow">The logit ladder · animations</p><h1>Watch the ideas move</h1></div>
+<p class="lede">Ten animations, in the order you need them. Each has a <b>what to watch</b> box and a <b>try this</b> box. Every number on screen is computed live from the formulas, using one invented crash example throughout.</p>
+<nav class="jump" aria-label="Logit ladder"><a href="ladder.html">Overview</a><a href="ladder-slides.html">Presentation</a><a href="ladder-animations.html" style="border-color:var(--accent)">Animations</a><a href="ladder-guide.html">Study guide</a></nav>
+<div class="key"><b>The running example.</b> A driver is in a crash. The outcome is <b>No injury</b>, <b>Minor injury</b> or <b>Severe injury</b>. One variable, <b>Unbelted</b> (1 if the driver wore no seat belt, 0 otherwise), changes the scores: Minor = −0.5 + 0.8 × Unbelted; Severe = −1.5 + 1.6 × Unbelted; No injury is the base with score 0. All numbers are invented for teaching.</div>
+<nav class="jump" aria-label="Animations"><a href="#a1">1 Logit curve</a><a href="#a2">2 Likelihood</a><a href="#a3">3 Why logs</a><a href="#a4">4 The climb</a><a href="#a5">5 MNL shares</a><a href="#a6">6 Gumbel</a><a href="#a7">7 The ladder</a><a href="#a8">8 Simulation</a><a href="#a9">9 Marginal effects</a><a href="#a10">10 LR test</a></nav>
+
+<section class="concept" id="a1"><p class="eyebrow">Animation 1 · Foundations</p><h2>The logit curve turns any score into a probability</h2>
+<p>A score z can be any number, from minus to plus infinity. The logit function squeezes it into the range 0 to 1: P = 1 ÷ (1 + e<sup>−z</sup>).</p>
+<div data-w="logit"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>At z = 0 the probability is exactly 0.5.</li><li>The curve is steepest in the middle and flat at both ends: the same change in x matters most when the outcome is uncertain.</li></ul></div><div><h4>Try this</h4><ul><li>Set β₁ to 0. The curve goes flat: x has no effect.</li><li>Make β₁ negative. The S flips: larger x now lowers the probability.</li><li>Change β₀ only. The whole S slides sideways without changing shape.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a2"><p class="eyebrow">Animation 2 · Foundations</p><h2>Likelihood: how well does a guess explain the data?</h2>
+<p>We saw 10 crashes and 3 were severe. For any guess p of the chance of a severe crash, the <b>likelihood</b> is the probability that guess gives to exactly what we saw. The <b>log-likelihood</b> is its natural log.</p>
+<div data-w="likelihood"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>Both curves peak at the same p: 3 ÷ 10 = 0.3.</li><li>The likelihood values are tiny (0.0022 at the peak); the log-likelihood values are ordinary negative numbers (−6.109).</li></ul></div><div><h4>Try this</h4><ul><li>Raise n to 40 with k = 12. The peak stays at 0.3 but gets sharper: more data, more certainty.</li><li>Compare p = 0.5 (LL = −6.931) with p = 0.3 (LL = −6.109). Higher (less negative) is better.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a3"><p class="eyebrow">Animation 3 · Foundations</p><h2>Why we take logs</h2>
+<p>The likelihood of a whole data set is a product: one probability per crash, multiplied together. Products of numbers below 1 shrink towards zero fast. Logs turn the product into a sum.</p>
+<div data-w="logs"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>The product is practically zero after about 15 crashes.</li><li>The sum of logs goes down steadily and stays readable.</li></ul></div><div><h4>Try this</h4><ul><li>Pause at any point and check that ln(product) equals the sum shown.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a4"><p class="eyebrow">Animation 4 · Estimation</p><h2>Maximum likelihood: the estimator climbs a hill</h2>
+<p>Software does not try every possible value. It starts somewhere and walks uphill on the log-likelihood surface until the ground is flat. The top of the hill is the estimate.</p>
+<div data-w="climb"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>Big steps where the hill is steep, tiny steps near the top.</li><li>On the right, the amber curve bends towards the data as the climb goes on.</li></ul></div><div><h4>Try this</h4><ul><li>Press <i>New data</i> a few times. The top moves a little each time: that wobble is what a standard error measures.</li><li>A narrow, sharp hill means a precise estimate; a wide, flat hill means an uncertain one.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a5"><p class="eyebrow">Animation 5 · Multinomial logit</p><h2>Score → weight → share</h2>
+<p>With three outcomes, each gets a score V. The multinomial logit turns scores into weights (e<sup>V</sup>) and weights into shares (weight ÷ total).</p>
+<div data-w="softmax"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>Belted driver: 54.7% no injury, 33.1% minor, 12.2% severe.</li><li>Unbelted driver: 28.9%, 39.1%, 32.0%. Severe more than doubles.</li></ul></div><div><h4>Try this</h4><ul><li>Add 1 to both scores. Watch No injury lose, even though its own score did not change: only differences between scores matter.</li><li>Switch on the split. Severe's two copies together get more than Severe alone did: the independence of irrelevant alternatives (IIA) problem.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a6"><p class="eyebrow">Animation 6 · Multinomial logit</p><h2>Where the formula comes from</h2>
+<p>Each outcome's total is its score plus a random error the analyst cannot see. The outcome with the largest total happens. If the errors are independent and follow the Gumbel (extreme value type I) distribution, the shares are exactly the multinomial logit formula.</p>
+<div data-w="gumbel"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>Single crashes are unpredictable: sometimes Severe wins with a low score.</li><li>Over hundreds of crashes the bars settle on the dashed lines.</li></ul></div><div><h4>Try this</h4><ul><li>Push the crash rate to 300 per second and watch the agreement.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a7"><p class="eyebrow">Animation 7 · The ladder</p><h2>Fixed → spread → shift → stretch</h2>
+<p>This is the heart of the ladder. Click the four rungs. The curve is the distribution of one coefficient (the effect of being unbelted on the severe-injury score) across crashes.</p>
+<div data-w="dist" data-level="all"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li><b>MNL:</b> a single line. Every crash gets β = 1.6.</li><li><b>RPL:</b> a bell. In 9.1% of crashes (the red area) being unbelted <i>lowers</i> severity.</li><li><b>RPLHM:</b> switch Young driver on. The bell <i>slides</i> to mean 2.1: a change in the mean.</li><li><b>RPLHMV:</b> switch Night on. The bell <i>narrows</i> from 1.2 to 0.804: a change in the variance.</li></ul></div><div><h4>Try this</h4><ul><li>Set Θ to 0 and ω to 0. RPLHMV becomes RPL again: each model contains the one before.</li><li>Watch the dots: they are 60 individual crashes. They slide with the mean and squeeze with the spread.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a8"><p class="eyebrow">Animation 8 · Estimation with random parameters</p><h2>Simulated probabilities: average over many draws</h2>
+<p>Once β is a bell, the probability of an outcome is an average over the whole bell, an integral with no formula. Software approximates it: draw many values of β, compute the logit probability for each, average.</p>
+<div data-w="sim"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>The first few draws jump around; the running average settles near 0.357.</li><li>That average (0.357) is higher than the probability at the mean β (0.320).</li></ul></div><div><h4>Try this</h4><ul><li>Add 10 random draws, reset, then add 10 Halton draws. Halton is usually much closer.</li></ul></div></div>
+</section>
+
+<section class="concept" id="a9"><p class="eyebrow">Animation 9 · Interpretation</p><h2>Marginal effects: what changes when Unbelted goes from 0 to 1</h2>
+<p>Coefficients have no direct units. Marginal effects do: they are changes in probability.</p>
+<div data-w="me"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>The three changes always add up to zero: probability moves between outcomes, it is not created.</li></ul></div><div><h4>Try this</h4><ul><li>Switch to random parameters. Same mean β, but the effect on Severe is larger (+0.235 instead of +0.198).</li></ul></div></div>
+</section>
+
+<section class="concept" id="a10"><p class="eyebrow">Animation 10 · Comparing models</p><h2>The likelihood ratio test: is the richer model worth it?</h2>
+<p>A richer model always fits at least as well. The question is whether it fits better by more than luck. LR = −2 × (LL<sub>restricted</sub> − LL<sub>unrestricted</sub>) is compared with a chi-square ruler.</p>
+<div data-w="lr"></div>
+<div class="watch"><div><h4>What to watch</h4><ul><li>Coin example: LR = 1.65 is inside the line (3.84). A fair coin explains 3 of 10 well enough.</li><li>Each step up the ladder in the invented study clears the line (37.0, 18.6, 8.8 against 5.99).</li></ul></div><div><h4>Try this</h4><ul><li>Type your own log-likelihoods from a paper and test them.</li></ul></div></div>
+</section>
+<p class="note">Next: the <a href="ladder-slides.html">presentation</a> puts these animations in a lecture, and the <a href="ladder-guide.html">study guide</a> works every number by hand.</p>
+</main>
+<footer class="site"><p>All data in the tools are simulated for teaching. This site is an independent learning aid and is not affiliated with the journal or its publisher.</p></footer>
+<script src="js/common.js"></script><script src="js/ladder-core.js"></script>
+<script>LW.mountAll(document);</script>
+</body>
+</html>

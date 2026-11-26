@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The logit ladder: MNL → RPL → RPLHM → RPLHMV · AMAR Methods Learning</title>
+<meta name="description" content="An interactive presentation, ten animations and a study guide on likelihood, the multinomial logit and random parameters logit models with heterogeneity in means and variances.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/site.css"><link rel="stylesheet" href="css/ladder.css">
+</head>
+<body>
+<header class="band"><div class="in"><a class="brand" href="index.html"><i></i>AMAR Methods Learning</a><nav aria-label="Pages"><a href="index.html">Home</a><a href="learn.html">Learn</a><a href="basics.html">Basics</a><a href="models.html">Models</a><a href="ladder.html" aria-current="page">Logit ladder</a><a href="study.html">Case study</a><a href="research.html">Research</a><a href="practice.html">Practice</a><a href="memory.html">Remember</a><a href="viewer.html?doc=materials/AMAR_Methods_Study_Guide.pdf&mode=guide">Study guide</a></nav></div></header>
+<main class="wrap">
+<div><p class="eyebrow">The logit ladder</p><h1>From the multinomial logit to RPLHMV</h1></div>
+<p class="lede">Crash-severity papers climb the same four rungs. Each rung keeps everything below it and adds one idea. Learn the ladder here with an interactive presentation, ten animations and a study guide, all built on one simple crash example.</p>
+<div class="ladder"><a class="rung" href="#rung-mnl">MNL</a><span class="arr">→</span><a class="rung" href="#rung-rpl">RPL</a><span class="arr">→</span><a class="rung" href="#rung-hm">RPLHM</a><span class="arr">→</span><a class="rung last" href="#rung-hmv">RPLHMV</a></div>
+<div class="grid">
+<a class="card" href="ladder-slides.html" style="text-decoration:none;color:inherit"><span class="num">Presentation · 41 slides</span><h3>Interactive lecture</h3><p>Probability, likelihood, log-likelihood, testing, then each rung of the ladder. Points appear one click at a time; 13 slides have live charts; speaker notes and a quiz.</p><p class="note">Keys: → ← to move, O for all slides, N for notes</p></a>
+<a class="card" href="ladder-animations.html" style="text-decoration:none;color:inherit"><span class="num">Animations · 10</span><h3>Watch the ideas move</h3><p>The logit curve, the likelihood peak, why we take logs, the estimator climbing, scores turning into shares, Gumbel errors, the bell that spreads, shifts and stretches, simulation, marginal effects and the LR test.</p></a>
+<a class="card" href="ladder-guide.html" style="text-decoration:none;color:inherit"><span class="num">Study guide · 20 sections</span><h3>Every number by hand</h3><p>A seven-day plan, worked calculations, a comparison of the four models, common mistakes, a glossary, a formula sheet, memory pictures and a 12-question self-test with answers.</p><p class="note">Also as a <span style="text-decoration:underline">printable PDF</span></p></a>
+</div>
+
+<h2>The ladder in four steps</h2>
+<p>All four models give the probability of each injury outcome. They differ only in what a coefficient (the effect of a variable) is allowed to do. Here the coefficient is the effect of not wearing a seat belt on the severe-injury score.</p>
+<div data-w="dist" data-level="all"></div>
+<div class="grid">
+<div class="card" id="rung-mnl"><span class="num">Rung 1 · fixed</span><h3>MNL: multinomial logit</h3><div class="formula" style="font-size:16px">P<sub>n</sub>(i) = e<sup>β<sub>i</sub>X<sub>in</sub></sup> ÷ Σ e<sup>β<sub>I</sub>X<sub>In</sub></sup></div><p>One coefficient for everyone. Simple and fast, but assumes all crashes respond the same way, and has the IIA property.</p></div>
+<div class="card" id="rung-rpl"><span class="num">Rung 2 · spread</span><h3>RPL: random parameters logit</h3><div class="formula" style="font-size:16px">β<sub>n</sub> = β + σν<sub>n</sub></div><p>The coefficient varies across crashes (unobserved heterogeneity). Probabilities become integrals, estimated by simulated maximum likelihood.</p></div>
+<div class="card" id="rung-hm"><span class="num">Rung 3 · shift</span><h3>RPLHM: heterogeneity in means</h3><div class="formula" style="font-size:16px">β<sub>n</sub> = β + ΘZ<sub>n</sub> + σν<sub>n</sub></div><p>The centre of the distribution moves with observed variables Z, such as a young driver.</p></div>
+<div class="card" id="rung-hmv"><span class="num">Rung 4 · stretch</span><h3>RPLHMV: heterogeneity in means and variances</h3><div class="formula" style="font-size:16px">β<sub>n</sub> = β + ΘZ<sub>n</sub> + σe<sup>ωW<sub>n</sub></sup>ν<sub>n</sub></div><p>The width of the distribution also changes with observed variables W, such as night-time.</p></div>
+</div>
+
+<h2>Concepts covered</h2>
+<div class="watch">
+<div><h4>Foundations</h4><ul><li>Probability, odds, log-odds</li><li>The binary logit and odds ratios</li><li>Likelihood and log-likelihood</li><li>Maximum likelihood and standard errors</li></ul></div>
+<div><h4>Judging models</h4><ul><li>LL(0), LL(c), LL(β) and ρ²</li><li>AIC and BIC</li><li>The likelihood ratio test, degrees of freedom, p-values</li><li>Nested versus non-nested models</li></ul></div>
+<div><h4>The models</h4><ul><li>Severity functions and the base outcome</li><li>Gumbel errors and IIA</li><li>Random parameters and simulation (Halton draws)</li><li>Change in mean (Θ) and change in variance (ω)</li></ul></div>
+<div><h4>Interpretation</h4><ul><li>Share of a random parameter above or below zero</li><li>Marginal effects and average marginal effects</li><li>A study workflow</li><li>Common mistakes</li></ul></div>
+</div>
+<p>New to all of this? Read <a href="basics.html">logit and likelihood from zero</a> and <a href="mnl.html">the multinomial logit from zero</a> first, then come back. To see the ladder used in a full study, go to the <a href="study.html">case study</a>.</p>
+<p class="note">All numbers are invented for teaching.</p>
+</main>
+<footer class="site"><p>All data in the tools are simulated for teaching. This site is an independent learning aid and is not affiliated with the journal or its publisher. Sources are listed on the <a href="index.html#sources">home page</a>.</p></footer>
+<script src="js/common.js"></script><script src="js/ladder-core.js"></script>
+<script>LW.mountAll(document);</script>
+</body>
+</html>

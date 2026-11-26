@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study guide: logit, MNL, RPL, RPLHM and RPLHMV · AMAR Methods Learning</title>
+<meta name="description" content="A beginner-friendly study guide: probability, likelihood, log-likelihood, the logit and multinomial logit, random parameters and heterogeneity in means and variances, with every number worked by hand.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/site.css"><link rel="stylesheet" href="css/ladder.css">
+</head>
+<body>
+<header class="band"><div class="in"><a class="brand" href="index.html"><i></i>AMAR Methods Learning</a><nav aria-label="Pages"><a href="index.html">Home</a><a href="learn.html">Learn</a><a href="basics.html">Basics</a><a href="models.html">Models</a><a href="ladder.html" aria-current="page">Logit ladder</a><a href="study.html">Case study</a><a href="research.html">Research</a><a href="practice.html">Practice</a><a href="memory.html">Remember</a><a href="viewer.html?doc=materials/AMAR_Methods_Study_Guide.pdf&mode=guide">Study guide</a></nav></div></header>
+<main class="wrap guide">
+<div><p class="eyebrow">The logit ladder · study guide</p><h1>Logit, MNL, RPL, RPLHM and RPLHMV, from zero</h1></div>
+<p class="lede">Everything you need to read a crash injury-severity paper that uses random parameters with heterogeneity in means and variances. Each idea is built from the one before, every number is worked by hand, and a few charts let you check yourself.</p>
+<nav class="jump noprint" aria-label="Logit ladder"><a href="ladder.html">Overview</a><a href="ladder-slides.html">Presentation</a><a href="ladder-animations.html">Animations</a><a href="ladder-guide.html" style="border-color:var(--accent)">Study guide</a><a href="materials/Logit_Ladder_Study_Guide.pdf">Download PDF</a><a href="#" onclick="window.print();return false">Print</a></nav>
+<div class="ladder"><span class="rung">MNL</span><span class="arr">→</span><span class="rung">RPL</span><span class="arr">→</span><span class="rung">RPLHM</span><span class="arr">→</span><span class="rung last">RPLHMV</span></div>
+
+<section class="concept" id="contents"><h2>Contents</h2>
+<ol class="toc"><li><a href="#use">How to use this guide</a></li><li><a href="#big">The big picture</a></li><li><a href="#prob">Probability, odds and log-odds</a></li><li><a href="#logit">The binary logit</a></li><li><a href="#lik">Likelihood and log-likelihood</a></li><li><a href="#mle">Maximum likelihood estimation</a></li><li><a href="#fit">Judging and comparing models</a></li><li><a href="#mnl">The multinomial logit (MNL)</a></li><li><a href="#me">Marginal effects</a></li><li><a href="#rpl">Random parameters logit (RPL)</a></li><li><a href="#hm">Heterogeneity in means (RPLHM)</a></li><li><a href="#hmv">Heterogeneity in means and variances (RPLHMV)</a></li><li><a href="#ladder">Climbing the ladder: a worked comparison</a></li><li><a href="#workflow">Workflow for a study</a></li><li><a href="#mistakes">Common mistakes</a></li><li><a href="#gloss">Glossary</a></li><li><a href="#sheet">Formula sheet</a></li><li><a href="#memory">Remembering it</a></li><li><a href="#quiz">Self-test with answers</a></li><li><a href="#refs">References</a></li></ol>
+</section>
+
+<section class="concept" id="use"><h2><span class="n">1</span>How to use this guide</h2>
+<p>Read the sections in order: each one uses the one before. After every worked example, cover the solution and redo it on paper. Then try the self-test at the end.</p>
+<table class="t"><tr><th>Day</th><th>Read</th><th>Do</th></tr>
+<tr><td>1</td><td>Sections 2–4</td><td>Work the logit example; move the sliders in the logit chart.</td></tr>
+<tr><td>2</td><td>Sections 5–6</td><td>Compute LL for p = 0.2, 0.3, 0.4 by hand.</td></tr>
+<tr><td>3</td><td>Section 7</td><td>Recompute ρ², AIC, BIC and one LR test from the table in section 13.</td></tr>
+<tr><td>4</td><td>Sections 8–9</td><td>Redo the belted and unbelted probabilities and the marginal effects.</td></tr>
+<tr><td>5</td><td>Section 10</td><td>Redo the five-draw simulation.</td></tr>
+<tr><td>6</td><td>Sections 11–13</td><td>Write the full RPLHMV equation from memory; explain Θ and ω aloud.</td></tr>
+<tr><td>7</td><td>Sections 14–19</td><td>Self-test; revisit what you got wrong.</td></tr></table>
+<p class="note">All data and numbers are invented for teaching. The running example: outcomes No injury (base), Minor injury and Severe injury; Minor score = −0.5 + 0.8 × Unbelted; Severe score = −1.5 + 1.6 × Unbelted.</p>
+</section>
+
+<section class="concept" id="big"><h2><span class="n">2</span>The big picture</h2>
+<p>All four models answer the same question: <i>given what we know about a crash, what is the probability of each injury outcome?</i> They differ in how they treat the effect (coefficient) of a variable.</p>
+<table class="t"><tr><th>Model</th><th>Full name</th><th>The coefficient is…</th><th>What it adds</th></tr>
+<tr><td><b>MNL</b></td><td>Multinomial logit</td><td>one fixed number for everyone</td><td>three or more unordered outcomes</td></tr>
+<tr><td><b>RPL</b></td><td>Random parameters (mixed) logit</td><td>a distribution across crashes</td><td>unobserved heterogeneity: σ</td></tr>
+<tr><td><b>RPLHM</b></td><td>RPL with heterogeneity in means</td><td>a distribution whose mean depends on observed Z</td><td>a shift: Θ</td></tr>
+<tr><td><b>RPLHMV</b></td><td>RPL with heterogeneity in means and variances</td><td>…and whose spread depends on observed W</td><td>a stretch: ω</td></tr></table>
+<div class="hook"><b>Four words: fixed → spread → shift → stretch.</b> Think of a coefficient as a jelly on a table. MNL is a toothpick: a single value. RPL is a wobbly jelly: a spread of values. RPLHM slides the jelly to a new place for some crashes. RPLHMV also stretches or squeezes it.</div>
+<p>Underneath all four sits one engine, the <b>log-likelihood</b>. It is used to estimate each model (find the best coefficients) and to compare them (decide whether a richer model is worth it). That is why this guide spends time on likelihood before the models.</p>
+</section>
+
+<section class="concept" id="prob"><h2><span class="n">3</span>Probability, odds and log-odds</h2>
+<p><b>Probability</b> p is a number from 0 to 1. <b>Odds</b> compare "happens" with "does not happen": odds = p ÷ (1 − p). <b>Log-odds</b> (the logit) is the natural log of the odds.</p>
+<table class="t"><tr><th>p</th><th>odds</th><th>log-odds</th></tr><tr><td>0.10</td><td>0.111</td><td>−2.20</td></tr><tr><td>0.25</td><td>0.333</td><td>−1.10</td></tr><tr><td>0.50</td><td>1</td><td>0</td></tr><tr><td>0.75</td><td>3</td><td>1.10</td></tr><tr><td>0.90</td><td>9</td><td>2.20</td></tr></table>
+<div class="key"><b>Why log-odds?</b> p is trapped between 0 and 1, but log-odds can be any number. So it is safe to write log-odds as a straight line, β₀ + β₁x, and never predict an impossible probability.</div>
+<p><b>Going back.</b> From log-odds z: odds = e<sup>z</sup>, and p = odds ÷ (1 + odds).</p>
+</section>
+
+<section class="concept" id="logit"><h2><span class="n">4</span>The binary logit</h2>
+<div class="formula">P(y = 1) = 1 ÷ (1 + e<sup>−z</sup>), &nbsp; z = β₀ + β₁x₁ + β₂x₂ + …<small>z is the score (log-odds); the β's are the coefficients we estimate.</small></div>
+<p><b>Worked example.</b> β₀ = −1, β₁ = 0.9, x = 2.</p>
+<ol class="work"><li>Score: z = −1 + 0.9 × 2 = 0.8.</li><li>Odds: e<sup>0.8</sup> = 2.226.</li><li>Probability: 2.226 ÷ (1 + 2.226) = 2.226 ÷ 3.226 = <b>0.690</b>.</li><li>Odds ratio for x: e<sup>0.9</sup> = 2.46. One more unit of x multiplies the odds by 2.46.</li></ol>
+<div data-w="logit"></div>
+<p><b>Reading a coefficient.</b> The sign says the direction. The size is a change in log-odds, not in probability. The <b>t-statistic</b> = coefficient ÷ standard error; |t| above 1.96 means the coefficient is statistically different from zero at the 5% level (two-sided).</p>
+</section>
+
+<section class="concept" id="lik"><h2><span class="n">5</span>Likelihood and log-likelihood</h2>
+<p><b>Likelihood</b> asks: if the parameters had these values, how probable would exactly the data we saw be? The data are fixed; the parameters are what we vary.</p>
+<p><b>Simplest case.</b> Ten crashes; three were severe. If each crash is severe with probability p, the probability of this pattern is</p>
+<div class="formula">L(p) = p<sup>3</sup> (1 − p)<sup>7</sup> &nbsp;&nbsp; LL(p) = ln L(p) = 3 ln p + 7 ln(1 − p)</div>
+<table class="t"><tr><th>p</th><th>L(p)</th><th>LL(p)</th></tr><tr><td>0.2</td><td>0.001678</td><td>−6.390</td></tr><tr><td><b>0.3</b></td><td><b>0.002224</b></td><td><b>−6.109</b></td></tr><tr><td>0.4</td><td>0.001792</td><td>−6.325</td></tr><tr><td>0.5</td><td>0.000977</td><td>−6.931</td></tr></table>
+<p><b>Worked: p = 0.3.</b></p>
+<ol class="work"><li>0.3<sup>3</sup> = 0.027; 0.7<sup>7</sup> = 0.08235.</li><li>L = 0.027 × 0.08235 = 0.002224.</li><li>LL = 3 × ln 0.3 + 7 × ln 0.7 = 3 × (−1.2040) + 7 × (−0.3567) = −3.612 − 2.497 = <b>−6.109</b>.</li></ol>
+<div data-w="likelihood"></div>
+<div class="key"><b>Three facts to remember.</b> (1) For discrete outcomes LL is always ≤ 0; closer to zero is better. (2) The log never moves the peak, so maximising LL and L give the same answer. (3) The peak here is at p = 3 ÷ 10: maximum likelihood picks the value that makes the observed data most probable.</div>
+<p><b>Why logs?</b> With N crashes the likelihood is a product of N probabilities, which becomes astronomically small (a computer rounds it to zero). The log turns the product into a sum: ln(P₁ × P₂ × … ) = ln P₁ + ln P₂ + … .</p>
+<p><b>For a crash model</b> with outcomes i and crashes n:</p>
+<div class="formula">LL(β) = Σ<sub>n</sub> Σ<sub>i</sub> δ<sub>in</sub> ln P<sub>n</sub>(i)<small>δ<sub>in</sub> = 1 if crash n had outcome i, 0 otherwise. Each crash adds the log of the probability the model gave to what actually happened.</small></div>
+</section>
+
+<section class="concept" id="mle"><h2><span class="n">6</span>Maximum likelihood estimation</h2>
+<p>Estimation means finding the β's that make LL as large as possible. Picture LL as a hill over all possible β values. Software starts somewhere, measures the slope (the <b>gradient</b>, or score), and steps uphill until the ground is flat. Newton-type methods (for example BFGS) also use the curvature to take smarter steps.</p>
+<ul><li><b>The estimate</b> is the top of the hill.</li><li><b>The standard error</b> comes from how sharp the top is. A sharp peak means the data pin β down precisely: small standard error. A flat top means many β values fit almost as well: large standard error.</li><li><b>Convergence</b> means the slope is (almost) zero. Check that the software reports convergence; try different starting values for complex models, because the hill can have several bumps.</li></ul>
+<p>See it move in <a href="ladder-animations.html#a4">animation 4</a>.</p>
+</section>
+
+<section class="concept" id="fit"><h2><span class="n">7</span>Judging and comparing models</h2>
+<h3>Reference values</h3>
+<ul><li><b>LL(0)</b>: all coefficients zero, every outcome equally likely. With I outcomes and N crashes, LL(0) = N ln(1/I). For N = 2,500 and three outcomes: 2,500 × ln(1/3) = 2,500 × (−1.0986) = −2,746.5.</li><li><b>LL(c)</b>: constants only.</li><li><b>LL(β)</b>: the full model at convergence.</li></ul>
+<h3>Measures</h3>
+<div class="formula">ρ² = 1 − LL(β) ÷ LL(0) &nbsp;·&nbsp; AIC = 2K − 2LL(β) &nbsp;·&nbsp; BIC = K ln N − 2LL(β)<small>K = number of estimated parameters. For AIC and BIC, smaller is better. ρ² (McFadden's pseudo R²) of 0.1–0.3 is common and is not comparable with a regression R².</small></div>
+<p><b>Worked (invented MNL):</b> K = 12, LL(β) = −2,450.3, N = 2,500.</p>
+<ol class="work"><li>ρ² = 1 − 2,450.3 ÷ 2,746.5 = 1 − 0.8922 = <b>0.108</b>.</li><li>AIC = 2 × 12 + 2 × 2,450.3 = 24 + 4,900.6 = <b>4,924.6</b>.</li><li>BIC = 12 × ln 2,500 + 4,900.6 = 12 × 7.824 + 4,900.6 = 93.9 + 4,900.6 = <b>4,994.5</b>.</li></ol>
+<h3>The likelihood ratio test</h3>
+<p>A <b>restricted</b> model is an unrestricted model with some parameters locked (usually at zero). The richer model always fits at least as well. The test asks whether the gain is bigger than chance would give.</p>
+<div class="formula">LR = −2 [LL(restricted) − LL(unrestricted)] ~ χ²(df), &nbsp; df = number of locked parameters</div>
+<p><b>Worked (coin):</b> restricted p = 0.5 (LL = −6.931), unrestricted p̂ = 0.3 (LL = −6.109), df = 1.</p>
+<ol class="work"><li>LR = −2 × (−6.931 + 6.109) = −2 × (−0.822) = 1.645.</li><li>Critical χ² value at 95% with 1 df = 3.84.</li><li>1.645 &lt; 3.84, so we cannot reject p = 0.5. Ten crashes are too few to tell.</li></ol>
+<div class="warn">Use the LR test only for <b>nested</b> models estimated on the <b>same data</b>. For non-nested models use AIC or BIC.</div>
+<div data-w="lr"></div>
+</section>
+
+<section class="concept" id="mnl"><h2><span class="n">8</span>The multinomial logit (MNL)</h2>
+<p>Each outcome i of crash n has a <b>severity function</b>:</p>
+<div class="formula">S<sub>in</sub> = β<sub>i</sub>X<sub>in</sub> + ε<sub>in</sub><small>β<sub>i</sub>X<sub>in</sub> = the explained part (written V<sub>in</sub>); ε<sub>in</sub> = everything we cannot see. The outcome with the largest S happens.</small></div>
+<p>If the ε's are independent and identically distributed <b>Gumbel</b> (extreme value type I), the probability of outcome i is (McFadden, 1973):</p>
+<div class="formula">P<sub>n</sub>(i) = e<sup>V<sub>in</sub></sup> ÷ Σ<sub>I</sub> e<sup>V<sub>In</sub></sup></div>
+<p><b>Base outcome.</b> Only differences in V matter, so one outcome (here No injury) has V = 0. Each other outcome's coefficients are read relative to it.</p>
+<p><b>Worked example.</b></p>
+<table class="t"><tr><th></th><th>V<sub>no</sub></th><th>V<sub>minor</sub></th><th>V<sub>severe</sub></th><th>weights e<sup>V</sup></th><th>total</th><th>P(no, minor, severe)</th></tr>
+<tr><td>Belted</td><td>0</td><td>−0.5</td><td>−1.5</td><td>1, 0.6065, 0.2231</td><td>1.8297</td><td><b>0.547, 0.331, 0.122</b></td></tr>
+<tr><td>Unbelted</td><td>0</td><td>0.3</td><td>0.1</td><td>1, 1.3499, 1.1052</td><td>3.4550</td><td><b>0.289, 0.391, 0.320</b></td></tr></table>
+<ol class="work"><li>Unbelted scores: minor −0.5 + 0.8 = 0.3; severe −1.5 + 1.6 = 0.1.</li><li>Weights: e<sup>0</sup> = 1; e<sup>0.3</sup> = 1.3499; e<sup>0.1</sup> = 1.1052. Total 3.4550.</li><li>P(severe) = 1.1052 ÷ 3.4550 = 0.320. The three shares add to 1.</li></ol>
+<div data-w="softmax"></div>
+<h3>Limits of the MNL</h3>
+<ul><li><b>Independence of irrelevant alternatives (IIA).</b> The ratio P(i) ÷ P(j) = e<sup>V<sub>i</sub> − V<sub>j</sub></sup> ignores every other outcome. Adding a near-copy of one outcome takes share from all others in proportion, which is unrealistic.</li><li><b>Fixed coefficients.</b> Everyone gets the same β. In crash data, many factors that change how a variable acts (body strength, seating position, vehicle details) are not recorded. This <b>unobserved heterogeneity</b>, if ignored, can bias estimates and conclusions (Mannering, Shankar and Bhat, 2016).</li></ul>
+</section>
+
+<section class="concept" id="me"><h2><span class="n">9</span>Marginal effects</h2>
+<p>Coefficients are in log-odds units, which nobody can picture. A <b>marginal effect</b> is a change in probability.</p>
+<ul><li>For an <b>indicator</b> (0/1) variable: P(outcome | x = 1) − P(outcome | x = 0).</li><li>For a continuous variable: the change in probability for a small change in x (the derivative).</li><li>In a study, compute it for every crash and average: the <b>average marginal effect</b>.</li></ul>
+<p><b>Worked (MNL):</b> Unbelted 0 → 1.</p>
+<ol class="work"><li>No injury: 0.289 − 0.547 = <b>−0.257</b>.</li><li>Minor: 0.391 − 0.331 = <b>+0.059</b>.</li><li>Severe: 0.320 − 0.122 = <b>+0.198</b>.</li><li>Check: −0.257 + 0.059 + 0.198 = 0. Probability is moved between outcomes, not created.</li></ol>
+<div class="key"><b>Note:</b> the coefficient of Unbelted in the Minor function is positive (0.8), yet Minor gains only a little: Severe gains more and pulls share away. In an MNL, the marginal effect on an outcome depends on all outcomes' coefficients. That is why papers report marginal effects, not only coefficients.</div>
+</section>
+
+<section class="concept" id="rpl"><h2><span class="n">10</span>Random parameters logit (RPL)</h2>
+<p>Let the coefficient differ from crash to crash:</p>
+<div class="formula">β<sub>n</sub> = β + σ ν<sub>n</sub>, &nbsp; ν<sub>n</sub> ~ N(0, 1)<small>β = mean effect; σ = standard deviation across crashes; ν<sub>n</sub> = the unseen draw for crash n. Other distributions (lognormal, triangular, uniform) are possible.</small></div>
+<p>We estimate β and σ, not each crash's β<sub>n</sub>. If σ is not significant, the parameter is treated as fixed.</p>
+<p><b>Worked: what share of crashes have a protective effect?</b> β<sub>severe, unbelted</sub> ~ N(1.6, 1.2²).</p>
+<ol class="work"><li>P(β<sub>n</sub> &lt; 0) = Φ((0 − 1.6) ÷ 1.2) = Φ(−1.333).</li><li>From the normal table: Φ(−1.333) = 0.091.</li><li>So in 9.1% of crashes being unbelted lowers the severe-injury score; in 90.9% it raises it.</li></ol>
+<h3>Why simulation?</h3>
+<p>The probability is now the MNL probability averaged over the distribution of β:</p>
+<div class="formula">P<sub>n</sub>(i) = ∫ [e<sup>V<sub>in</sub>(β)</sup> ÷ Σ<sub>I</sub> e<sup>V<sub>In</sub>(β)</sup>] f(β | φ) dβ ≈ (1/R) Σ<sub>r=1..R</sub> P<sub>n</sub>(i | β<sup>r</sup>)</div>
+<p>There is no formula for this integral. We draw R values of β, compute the MNL probability for each, and average. The resulting <b>simulated log-likelihood</b> is maximised: <b>simulated maximum likelihood</b>. <b>Halton draws</b> (an evenly spread sequence) reach a given accuracy with far fewer draws than random draws; crash studies often use several hundred to a thousand.</p>
+<p><b>Worked: five draws</b> for an unbelted driver, ν = −1.28, −0.52, 0, 0.52, 1.28.</p>
+<table class="t"><tr><th>ν</th><th>β = 1.6 + 1.2ν</th><th>V<sub>severe</sub></th><th>e<sup>V<sub>severe</sub></sup></th><th>P(severe) = e<sup>V</sup> ÷ (1 + 1.3499 + e<sup>V</sup>)</th></tr>
+<tr><td>−1.28</td><td>0.064</td><td>−1.436</td><td>0.238</td><td>0.092</td></tr><tr><td>−0.52</td><td>0.976</td><td>−0.524</td><td>0.592</td><td>0.201</td></tr><tr><td>0</td><td>1.600</td><td>0.100</td><td>1.105</td><td>0.320</td></tr><tr><td>0.52</td><td>2.224</td><td>0.724</td><td>2.063</td><td>0.468</td></tr><tr><td>1.28</td><td>3.136</td><td>1.636</td><td>5.135</td><td>0.686</td></tr></table>
+<ol class="work"><li>Average = (0.092 + 0.201 + 0.320 + 0.468 + 0.686) ÷ 5 = 1.767 ÷ 5 = <b>0.353</b>.</li><li>With very many draws the answer is 0.357.</li><li>Both are above 0.320, the probability at the mean β: averaging over a curved function is not the same as plugging in the average.</li></ol>
+<div data-w="dist" data-level="rpl"></div>
+</section>
+
+<section class="concept" id="hm"><h2><span class="n">11</span>Heterogeneity in means (RPLHM)</h2>
+<p>Part of the variation in β may be linked to something we <i>can</i> observe. Let the mean depend on it:</p>
+<div class="formula">β<sub>n</sub> = β + Θ Z<sub>n</sub> + σ ν<sub>n</sub><small>Z<sub>n</sub> = observed variable(s) for crash n; Θ = the shift in the mean per unit of Z.</small></div>
+<p><b>Worked.</b> Z = 1 for a young driver, Θ = 0.5.</p>
+<ol class="work"><li>Mean for young drivers: 1.6 + 0.5 × 1 = 2.1. For others: 1.6.</li><li>Spread unchanged: σ = 1.2.</li><li>Protective share for young drivers: Φ(−2.1 ÷ 1.2) = Φ(−1.75) = 0.040 (was 0.091).</li><li>Average P(severe | unbelted) for young drivers: 0.451 (others: 0.357).</li></ol>
+<p><b>Interpretation.</b> Θ &gt; 0: being young makes the effect of not wearing a belt larger on average. The bell keeps its shape and slides right. Locking Θ = 0 returns the RPL.</p>
+<div data-w="dist" data-level="hm"></div>
+</section>
+
+<section class="concept" id="hmv"><h2><span class="n">12</span>Heterogeneity in means and variances (RPLHMV)</h2>
+<p>The spread can depend on observed variables too:</p>
+<div class="formula">β<sub>n</sub> = β + Θ Z<sub>n</sub> + σ e<sup>ω W<sub>n</sub></sup> ν<sub>n</sub><small>W<sub>n</sub> = observed variable(s) for crash n; ω = their effect on the spread. The exponential keeps the spread positive.</small></div>
+<p>This is the form used by Seraneeprakarn et al. (2017) and many later papers in <i>Analytic Methods in Accident Research</i>.</p>
+<p><b>Worked.</b> W = 1 for a night-time crash, ω = −0.4.</p>
+<ol class="work"><li>Spread at night: 1.2 × e<sup>−0.4</sup> = 1.2 × 0.6703 = 0.804. By day: 1.2.</li><li>Protective share at night (not young): Φ(−1.6 ÷ 0.804) = Φ(−1.99) = 0.023.</li><li>Young driver at night: mean 2.1, spread 0.804.</li></ol>
+<p><b>Interpretation.</b> ω &lt; 0: at night, crashes are more alike in how much being unbelted matters; ω &gt; 0 would mean more varied. Locking ω = 0 returns the RPLHM.</p>
+<div data-w="dist" data-level="all"></div>
+<table class="t"><tr><th>Group</th><th>Mean</th><th>Spread</th><th>Share protective</th><th>Average P(severe | unbelted)</th></tr>
+<tr><td>Not young, day</td><td>1.6</td><td>1.200</td><td>0.091</td><td>0.357</td></tr><tr><td>Young, day</td><td>2.1</td><td>1.200</td><td>0.040</td><td>0.451</td></tr><tr><td>Not young, night</td><td>1.6</td><td>0.804</td><td>0.023</td><td>0.340</td></tr><tr><td>Young, night</td><td>2.1</td><td>0.804</td><td>0.005</td><td>0.445</td></tr></table>
+</section>
+
+<section class="concept" id="ladder"><h2><span class="n">13</span>Climbing the ladder: a worked comparison</h2>
+<p>Invented results for one data set (N = 2,500 crashes, three outcomes, LL(0) = −2,746.5):</p>
+<div class="scroll"><table class="t"><tr><th>Model</th><th>K</th><th>LL(β)</th><th>ρ²</th><th>AIC</th><th>BIC</th></tr>
+<tr><td>MNL</td><td>12</td><td>−2,450.3</td><td>0.108</td><td>4,924.6</td><td>4,994.5</td></tr><tr><td>RPL</td><td>14</td><td>−2,431.8</td><td>0.115</td><td>4,891.6</td><td>4,973.1</td></tr><tr><td>RPLHM</td><td>16</td><td>−2,422.5</td><td>0.118</td><td>4,877.0</td><td>4,970.2</td></tr><tr><td>RPLHMV</td><td>18</td><td>−2,418.1</td><td>0.120</td><td>4,872.2</td><td>4,977.0</td></tr></table></div>
+<table class="t"><tr><th>Step</th><th>Locked in the simpler model</th><th>LR</th><th>df</th><th>χ²<sub>0.95</sub></th><th>p</th><th>Decision</th></tr>
+<tr><td>MNL → RPL</td><td>σ = 0 for two parameters</td><td>37.0</td><td>2</td><td>5.99</td><td>&lt; 0.001</td><td>keep RPL</td></tr>
+<tr><td>RPL → RPLHM</td><td>Θ = 0 for two terms</td><td>18.6</td><td>2</td><td>5.99</td><td>&lt; 0.001</td><td>keep RPLHM</td></tr>
+<tr><td>RPLHM → RPLHMV</td><td>ω = 0 for two terms</td><td>8.8</td><td>2</td><td>5.99</td><td>0.012</td><td>keep RPLHMV</td></tr></table>
+<p>AIC is lowest for RPLHMV; BIC, which penalises extra parameters more, is lowest for RPLHM. A careful paper reports both and explains its choice (here, the LR tests and AIC favour RPLHMV).</p>
+<p class="note">One caution on testing σ = 0: a standard deviation cannot be negative, so the null value sits on the edge of the allowed range and the usual χ² reference is approximate (it tends to be conservative). Practice in the field is still to report the LR test and the t-statistic of σ.</p>
+</section>
+
+<section class="concept" id="workflow"><h2><span class="n">14</span>Workflow for a study</h2>
+<ol class="work"><li>Define the outcomes and code explanatory variables, mostly as 0/1 indicators.</li><li>Estimate an MNL; keep variables by a stated rule (for example |t| &gt; 1.96).</li><li>Test each coefficient as random (normal first; several hundred to 1,000 Halton draws). Keep it random if σ is significant.</li><li>Test observed variables in the <b>means</b> of the random parameters (Θ).</li><li>Test observed variables in the <b>variances</b> (ω).</li><li>Compare models: LR tests (nested), AIC and BIC.</li><li>Report: coefficients with t-statistics; σ, Θ, ω; the share of each random parameter above and below zero; average marginal effects.</li><li>Check robustness: more draws, other starting values, other distributions; temporal and spatial stability tests where relevant (see the <a href="study.html">case study</a>).</li></ol>
+<p>Software commonly used for these models includes NLOGIT, Apollo (R) and Biogeme (Python).</p>
+</section>
+
+<section class="concept" id="mistakes"><h2><span class="n">15</span>Common mistakes</h2>
+<table class="t"><tr><th>Mistake</th><th>Why it is wrong</th><th>Do this instead</th></tr>
+<tr><td>Reading β as a change in probability</td><td>β is in log-odds and depends on other outcomes in an MNL</td><td>Report marginal effects</td></tr>
+<tr><td>Comparing LL across different data sets</td><td>LL grows with N and depends on the data</td><td>Compare only models estimated on the same crashes</td></tr>
+<tr><td>LR test for non-nested models</td><td>The χ² result needs nesting</td><td>Use AIC or BIC</td></tr>
+<tr><td>Too few draws</td><td>Simulation error can change estimates</td><td>Increase R until estimates stop moving</td></tr>
+<tr><td>Predicting with the mean β only</td><td>Ignores the spread (0.320 vs 0.357)</td><td>Average over draws</td></tr>
+<tr><td>"Θ is significant, so Z causes it"</td><td>It is an association, possibly confounded</td><td>Describe it as heterogeneity linked to Z</td></tr>
+<tr><td>Confusing σ with a standard error</td><td>σ is real variation across crashes; the standard error is uncertainty about an estimate</td><td>Report both, clearly labelled</td></tr></table>
+</section>
+
+<section class="concept" id="gloss"><h2><span class="n">16</span>Glossary</h2>
+<div class="scroll"><table class="t">
+<tr><td><b>Base outcome</b></td><td>The outcome whose score is fixed at 0; others are read relative to it.</td></tr>
+<tr><td><b>Coefficient (parameter), β</b></td><td>Effect of a variable on an outcome's score.</td></tr>
+<tr><td><b>Gumbel distribution</b></td><td>Extreme value type I; the error distribution that produces the logit formula.</td></tr>
+<tr><td><b>Halton draws</b></td><td>An evenly spread sequence used instead of random numbers in simulation.</td></tr>
+<tr><td><b>Heterogeneity in means</b></td><td>The mean of a random parameter depends on observed variables (Θ).</td></tr>
+<tr><td><b>Heterogeneity in variances</b></td><td>The spread of a random parameter depends on observed variables (ω).</td></tr>
+<tr><td><b>IIA</b></td><td>Independence of irrelevant alternatives: the ratio of two probabilities ignores other outcomes.</td></tr>
+<tr><td><b>Likelihood, L</b></td><td>Probability of the observed data, viewed as a function of the parameters.</td></tr>
+<tr><td><b>Log-likelihood, LL</b></td><td>ln L; a sum over observations; closer to zero is better.</td></tr>
+<tr><td><b>LR test</b></td><td>−2[LL(restricted) − LL(unrestricted)] compared with χ².</td></tr>
+<tr><td><b>Marginal effect</b></td><td>Change in an outcome's probability when a variable changes.</td></tr>
+<tr><td><b>Maximum likelihood</b></td><td>Choosing parameters that maximise LL.</td></tr>
+<tr><td><b>Nested models</b></td><td>One model is the other with some parameters locked.</td></tr>
+<tr><td><b>Random parameter</b></td><td>A coefficient that varies across observations according to a distribution.</td></tr>
+<tr><td><b>ρ²</b></td><td>McFadden's pseudo R²: 1 − LL(β)/LL(0).</td></tr>
+<tr><td><b>Simulated maximum likelihood</b></td><td>Maximum likelihood with probabilities approximated by averaging over draws.</td></tr>
+<tr><td><b>Unobserved heterogeneity</b></td><td>Variation in the effects of variables across observations, caused by factors not in the data.</td></tr></table></div>
+</section>
+
+<section class="concept" id="sheet"><h2><span class="n">17</span>Formula sheet</h2>
+<div class="cheat">
+<div><h4>Odds and logit</h4><p>odds = p/(1 − p); z = ln(odds); p = 1/(1 + e<sup>−z</sup>)</p></div>
+<div><h4>Likelihood</h4><p>L = Π P<sub>n</sub>(observed); LL = Σ ln P<sub>n</sub>(observed)</p></div>
+<div><h4>Fit</h4><p>LL(0) = N ln(1/I); ρ² = 1 − LL(β)/LL(0); AIC = 2K − 2LL; BIC = K ln N − 2LL</p></div>
+<div><h4>LR test</h4><p>LR = −2[LL<sub>R</sub> − LL<sub>U</sub>] ~ χ²(df). χ²<sub>0.95</sub>: 1 df 3.84 · 2 df 5.99 · 3 df 7.81 · 4 df 9.49</p></div>
+<div><h4>MNL</h4><p>P<sub>n</sub>(i) = e<sup>V<sub>in</sub></sup> / Σ<sub>I</sub> e<sup>V<sub>In</sub></sup>; V of base = 0</p></div>
+<div><h4>Marginal effect (0/1)</h4><p>P(i | x = 1) − P(i | x = 0), averaged over crashes; sums to 0 across outcomes</p></div>
+<div><h4>RPL</h4><p>β<sub>n</sub> = β + σν<sub>n</sub>; share &lt; 0 = Φ(−β/σ); P ≈ (1/R) Σ<sub>r</sub> P(i | β<sup>r</sup>)</p></div>
+<div><h4>RPLHM</h4><p>β<sub>n</sub> = β + ΘZ<sub>n</sub> + σν<sub>n</sub>; mean = β + ΘZ</p></div>
+<div><h4>RPLHMV</h4><p>β<sub>n</sub> = β + ΘZ<sub>n</sub> + σe<sup>ωW<sub>n</sub></sup>ν<sub>n</sub>; spread = σe<sup>ωW</sup></p></div>
+</div>
+</section>
+
+<section class="concept" id="memory"><h2><span class="n">18</span>Remembering it</h2>
+<div class="hook"><b>The jelly on the table.</b> Picture a long table. On the left, a single <b>toothpick</b> stands upright at 1.6: that is the MNL, one value for everyone. Next to it, someone drops a wobbly <b>jelly</b>: it spreads out from about −1 to 4, and a little red puddle drips past zero, the 9% protective share. That is the RPL and its σ. A group of <b>young drivers</b> walks up and pushes the jelly half a step to the right without changing its shape: the shift Θ, heterogeneity in the mean (RPLHM). Then the lights go out for <b>night</b> and the jelly shivers and pulls itself narrower: the stretch ω, heterogeneity in the variance (RPLHMV).</div>
+<div class="hook"><b>The judge with a log book.</b> Every model stands in front of a judge who reads each crash and writes down the log of the probability the model gave to what really happened. The total in the log book is the log-likelihood. Closer to zero wins. When a richer model asks for more parameters, the judge doubles the difference in the totals and holds it against a χ² ruler: past the line, the extra parameters are allowed.</div>
+<p><b>Spaced review.</b> Redraw the jelly story and the RPLHMV equation from memory after 1 day, 3 days, 7 days and 14 days.</p>
+</section>
+
+<section class="concept" id="quiz"><h2><span class="n">19</span>Self-test with answers</h2>
+<ol class="work">
+<li>A score is z = −1. What is the probability? <details class="ans"><summary>Answer</summary>1/(1 + e<sup>1</sup>) = 1/3.718 = 0.269.</details></li>
+<li>What are the odds when p = 0.8? <details class="ans"><summary>Answer</summary>0.8/0.2 = 4.</details></li>
+<li>Twenty crashes, four severe. LL at p = 0.2? <details class="ans"><summary>Answer</summary>4 ln 0.2 + 16 ln 0.8 = −6.438 − 3.570 = −10.008. Since 4/20 = 0.2, this is the maximum.</details></li>
+<li>Scores (0, 1, −1) for (no, minor, severe). The three probabilities? <details class="ans"><summary>Answer</summary>Weights 1, 2.718, 0.368; total 4.086; P = 0.245, 0.665, 0.090.</details></li>
+<li>LL(0) = −1,000 and LL(β) = −850. ρ²? AIC if K = 10? <details class="ans"><summary>Answer</summary>ρ² = 1 − 850/1,000 = 0.15. AIC = 20 + 1,700 = 1,720.</details></li>
+<li>Restricted LL = −1,210, unrestricted LL = −1,200, 3 restrictions. Decision? <details class="ans"><summary>Answer</summary>LR = 20 &gt; 7.81: reject the restrictions; keep the unrestricted model.</details></li>
+<li>A random parameter has mean 0.5 and standard deviation 1. Share below zero? <details class="ans"><summary>Answer</summary>Φ(−0.5) = 0.309, about 31%.</details></li>
+<li>β<sub>n</sub> = −0.8 + 0.6Z + 1.0ν. Mean when Z = 1? <details class="ans"><summary>Answer</summary>−0.8 + 0.6 = −0.2.</details></li>
+<li>σ = 0.9, ω = 0.5, W = 1. The spread? <details class="ans"><summary>Answer</summary>0.9 × e<sup>0.5</sup> = 0.9 × 1.649 = 1.484.</details></li>
+<li>Four draws give probabilities 0.2, 0.3, 0.4, 0.5. Simulated probability? <details class="ans"><summary>Answer</summary>(0.2 + 0.3 + 0.4 + 0.5)/4 = 0.35.</details></li>
+<li>P(severe) goes from 0.15 to 0.27 when a 0/1 variable switches on. Marginal effect? <details class="ans"><summary>Answer</summary>+0.12 (12 percentage points).</details></li>
+<li>Which restriction turns RPLHMV into RPLHM? And RPL into MNL? <details class="ans"><summary>Answer</summary>ω = 0; σ = 0.</details></li>
+</ol>
+</section>
+
+<section class="concept" id="refs"><h2><span class="n">20</span>References</h2>
+<ul>
+<li>McFadden, D. (1973). Conditional logit analysis of qualitative choice behavior. In P. Zarembka (ed.), <i>Frontiers in Econometrics</i>, 105–142. Academic Press.</li>
+<li>Train, K. (2009). <i>Discrete Choice Methods with Simulation</i>, 2nd ed. Cambridge University Press.</li>
+<li>Washington, S., Karlaftis, M., Mannering, F. and Anastasopoulos, P. (2020). <i>Statistical and Econometric Methods for Transportation Data Analysis</i>, 3rd ed. CRC Press.</li>
+<li>Mannering, F., Shankar, V. and Bhat, C. (2016). Unobserved heterogeneity and the statistical analysis of highway accident data. <i>Analytic Methods in Accident Research</i> 11, 1–16.</li>
+<li>Seraneeprakarn, P., Huang, S., Shankar, V., Mannering, F., Venkataraman, N. and Milton, J. (2017). Occupant injury severities in hybrid-vehicle involved crashes: A random parameters approach with heterogeneity in means and variances. <i>Analytic Methods in Accident Research</i> 15, 41–55.</li>
+<li>Hou, Q., Huo, X., Leng, J. and Mannering, F. (2022). A note on out-of-sample prediction, marginal effects computations, and temporal testing with random parameters crash-injury severity models. <i>Analytic Methods in Accident Research</i> 33, 100191.</li>
+</ul>
+<p class="note">All numbers in this guide are invented for teaching.</p>
+</section>
+</main>
+<footer class="site"><p>All data in the tools are simulated for teaching. This site is an independent learning aid and is not affiliated with the journal or its publisher.</p></footer>
+<script src="js/common.js"></script><script src="js/ladder-core.js"></script>
+<script>LW.mountAll(document); window.addEventListener('beforeprint', function () { [].forEach.call(document.querySelectorAll('details'), function (d) { d.open = true; }); });</script>
+</body>
+</html>
